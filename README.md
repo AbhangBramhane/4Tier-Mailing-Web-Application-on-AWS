@@ -3,12 +3,12 @@
 
 
 
-## STEP 1: Create The Base Networking Infrastructure For NAT/ELB, Webservers, Appservers and Database
-### A) Create The VPC Network
+1: The Base Networking Infrastructure For NAT/ELB, Webservers, Appservers and Database
+ A) Create The VPC Network
 - Name: `Prod-VPC`
 - CidirBlock: `10.0.0.0/16`
 
-### B) Create The NAT/AL Subnet 1 and 2
+B) The NAT/AL Subnet 1 and 2
 1. NAT/ALB Subnet 1
 - Name: `Prod-NAT-ALB-Subnet-1`
 - CidirBlock: `10.0.5.0/28`
@@ -19,7 +19,7 @@
 - CidirBlock: `10.0.10.0/28`
 - Availability Zone: `us-west-1c`
 
-### B) Create The Webserver Subnet 1 and 2
+C) The Webserver Subnet 1 and 2
 1. Webserver Subnet 1
 - Name: `Prod-Webserver-Subnet-1`
 - CidirBlock: `10.0.15.0`
@@ -30,7 +30,7 @@
 - CidirBlock: `10.0.20.0`
 - Availability Zone: `us-west-1c`
 
-### C) Create The Appserver Subnet 1 and 2
+D) The Appserver Subnet 1 and 2
 1. Appserver Subnet 1
 - Name: `Prod-Appserver-Subnet-1`
 - CidirBlock: `10.0.25.0`
@@ -41,7 +41,7 @@
 - CidirBlock: `10.0.30.0`
 - Availability Zone: `us-west-1c`
 
-### D) Create The Database Subnet 1 and 2
+E) The Database Subnet 1 and 2
 1. Database Subnet 1
 - Name: `Prod-db-Subnet-1`
 - CidirBlock: `10.0.35.0`
@@ -52,42 +52,42 @@
 - CidirBlock: `10.0.40.0`
 - Availability Zone: `us-west-1c`
 
-## STEP 2: Create 4 Public Route Rable and 4 Private Route Tables (Because of NAT Redundancy Implementation)
+2: 4 Public Route Rable and 4 Private Route Tables (Because of NAT Redundancy Implementation)
 - See AWS Doc: https://www.shorturl.at/HSU18
 
-### A) NAT/ALB Public Subnet 1 Route Table
+A) NAT/ALB Public Subnet 1 Route Table
 - Name: `Prod-NAT-ALB-Public-RT-1`
 - VPC: Select the `Prod-VPC`
 
-### B) NAT/ALB Public Subnet 2 Route Table
+B) NAT/ALB Public Subnet 2 Route Table
 - Name: `Prod-NAT-ALB-Public-RT-2`
 - VPC: Select the `Prod-VPC`
 
-### C) Webserver Subnet 1 Route Table
+C) Webserver Subnet 1 Route Table
 - Name: `Prod-Webserver-RT-1`
 - VPC: Select the `Prod-VPC`
 
-### D) Webserver Subnet 2 Route Table
+D) Webserver Subnet 2 Route Table
 - Name: `Prod-Webserver-RT-2`
 - VPC: Select the `Prod-VPC`
 
-### E) Appserver Subnet 1 Table Table
+E) Appserver Subnet 1 Table Table
 - Name: `Prod-Appserver-RT-1`
 - VPC: Select the `Prod-VPC`
 
-### F) Appserver Subnet 2 Table Table
+F) Appserver Subnet 2 Table Table
 - Name: `Prod-Appserver-RT-2`
 - VPC: Select the `Prod-VPC`
 
-### G) Database Subnet 1 Route Table
+G) Database Subnet 1 Route Table
 - Name: `Prod-Database-RT-1`
 - VPC: Select the `Prod-VPC`
 
-### H) Database Subnet 2 Route Table
+H) Database Subnet 2 Route Table
 - Name: `Prod-Database-RT-2`
 - VPC: Select the `Prod-VPC`
 
-## STEP 3: Associate All Above Route Tables With Their Respective Subnets
+3: Associate All Route Tables With Their Respective Subnets
 1. Associate `Prod-NAT-ALB-Public-RT-1` with `Prod-NAT-ALB-Subnet-1` 
 2. Associate `Prod-NAT-ALB-Public-RT-2` with `Prod-NAT-ALB-Subnet-2`
 3. Associate `Prod-Webserver-RT-1` with `Prod-Webserver-Subnet-1` 
@@ -97,91 +97,84 @@
 7. Associate `Prod-Database-RT-1` with `Prod-db-Subnet-1` 
 8. Associate `Prod-Database-RT-2` with `Prod-db-Subnet-2`
 
-## STEP 4: Create and Configure IGW and NAT Gateways 
-### A) Create and Configure IGW to Expose The `NAT/ALB Subnet 1` and `NAT/ALB Subnet 2`
-1. Create the Internet Gatway
+4: Configure IGW and NAT Gateways 
+A) Configure IGW to Expose The `NAT/ALB Subnet 1` and `NAT/ALB Subnet 2`
+1. The Internet Gatway
 - Name: `Prod-VPC-IGW`
 - VPC: Select the `Prod-VPC` Network
 
 2. Configure/Edit the `Prod-NAT-ALB-Public-RT-1` Route Table 
 - Destination: `0.0.0.0/0`
 - Target: Select the `Prod-VPC-IGW`
-- `SAVE`
 
 3. Configure/Edit the `Prod-NAT-ALB-Public-RT-2` Route Table 
 - Destination: `0.0.0.0/0`
 - Target: Select the `Prod-VPC-IGW`
-- `SAVE`
 
 4. Configure/Edit the `Prod-Webserver-RT-1` Route Table 
 - Destination: `0.0.0.0/0`
 - Target: Select the `Prod-VPC-IGW`
-- `SAVE`
 
 5. Configure/Edit the `Prod-Webserver-RT-2` Route Table 
 - Destination: `0.0.0.0/0`
 - Target: Select the `Prod-VPC-IGW`
-- `SAVE`
+  
 
-### B) Create and Configure The NAT Gateways to point at the App and Database Tiers/Subnets
-1. Create the `First NAT Gateway`
+B) Configure The NAT Gateways to point at the App and Database Tiers/Subnets
+1. The `First NAT Gateway`
 - Name: `Prod-NAT-Gateway-1`
 - Subnet: Select `Prod-NAT-ALB-Subnet-1`
 - Elastic IP: Clcik `Allocate Elastic IP`
-- Click `Create NAT gateway`
+-  `Create NAT gateway`
 
-2. Create the `Second NAT Gateway`
+2. The `Second NAT Gateway`
 - Name: `Prod-NAT-Gateway-2`
 - Subnet: Select `Prod-NAT-ALB-Subnet-2`
 - Elastic IP: Clcik `Allocate Elastic IP`
-- Click `Create NAT gateway`
+-  `Create NAT gateway`
 
-### C) Configure/Edit the Route Tables of `Appserver subnets` and `Database subnets` to Add the `Nat gateway` Configs
+C) Configure/Edit the Route Tables of `Appserver subnets` and `Database subnets` to Add the `Nat gateway` Configs
 
-### C.1) Update the `Appserver subnet` Route tables (1 and 2) with the following configs
+C.1) Updated the `Appserver subnet` Route tables (1 and 2) with the following configs
 
 1. Select the `Prod-Appserver-RT-1`
 - Click on Edit and `Add route`
 - Destination: `0.0.0.0/0`
-- Target: Select `Prod-NAT-Gateway-1`
+- Target:  `Prod-NAT-Gateway-1`
 
 2. Select the `Prod-Appserver-RT-2`
 - Click on Edit and `Add route`
 - Destination: `0.0.0.0/0`
-- Target: Select `Prod-NAT-Gateway-2`
+- Target:  `Prod-NAT-Gateway-2`
 
-### C.2) Update the `Database subnet` Route tables (1 and 2) with the following configs
+C.2) Update the `Database subnet` Route tables (1 and 2) with the following configs
 
 1. Select the `Prod-Database-RT-1`
 - Click on Edit and `Add route`
 - Destination: `0.0.0.0/0`
-- Target: Select `Prod-NAT-Gateway-1`
+- Target:  `Prod-NAT-Gateway-1`
 
 2. Select the `Prod-Database-RT-2`
 - Click on Edit and `Add route`
 - Destination: `0.0.0.0/0`
-- Target: Select `Prod-NAT-Gateway-2`
+- Target: `Prod-NAT-Gateway-2`
 
-## STEP 5: Create Security Groups
-### Create the Bastion Host Security Group
-- Click on Create Security group
+5: Security Groups
+The Bastion Host Security Group
     - Name: `Bastion-Host-Security-Group`
     - Inbound: 
         - Ports: `22`
         - Source: Provide `Your IP or 0.0.0.0/0`
 
-### Create the Frontend/External Load Balancer Security Group
-- Navigate to `Security groups`
-- Click on Create Security group
+The Frontend/External Load Balancer Security Group
     - Name: `Frontend-LB-Security-Group`
     - Inbound: 
         - Ports: `80 and 443`
         - Source: `0.0.0.0/0`
 
-    - Click `Create Security Group`
+ 
 
-### Create the Webservers Security Group
-- Click on Create Security group
+ the Webservers Security Group
     - Name: `Webservers-Security-Group`
     - Inbound: 
         - Ports: `80 and 443`
@@ -189,15 +182,13 @@
         - Ports: `22`
             - Source: `Bastion-Host-Security-Group` ID
 
-### Create the Backend Load Balancer Security Group
-- Click on Create Security group
+The Backend Load Balancer Security Group
     - Name: `Backend-LB-Security-Group`
     - Inbound: 
         - Ports: `80 and 443`
         - Source: Provide the `Webservers-Security-Group` ID
 
-### Create the Appservers Security Group
-- Click on Create Security group
+The Appservers Security Group
     - Name: `Appservers-Security-Group`
     - Inbound: 
         - Ports: `80 and 443`
@@ -205,7 +196,7 @@
         - Ports: `22`
             - Source: `Bastion-Host-Security-Group` ID
 
-### Create the Database Security Group
+The Database Security Group
 - Click on Create Security group
     - Name: `Database-Security-Group`
     - Inbound: 
@@ -214,10 +205,9 @@
         - Ports: `3306`
             - Source: `Bastion-Host-Security-Group` ID
 
-## STEP 6: Create Frontend and Backend Load Balancers
-### Create Frontend Load Balancer
+6: Frontend and Backend Load Balancers
+Frontend Load Balancer
 - Listeners and routing: 
-    - Click on `Create a target group` to create `HTTP` target group
         - target type: select `instances`
         - Target group name: `Frontend-LB-HTTP-TG`
         - Protocol and Port: `HTTP`:`80`
@@ -225,10 +215,7 @@
         - Protocol version: `HTTP1`
         - Health checks: `HTTP`
         - Health check path: `/VenturaMailingApp.php`
-        - Click on `Next`
-        - Click on `Create target group`
  
-- Navigate to `EC2/Load Balancers` and Click on `Create Load Balancer`
     - Type: Choose `Application Load Balancer`
     - Load balancer name: `Prod-Frontend-LB`
     - Scheme: `Internet-facing`
@@ -243,11 +230,10 @@
         - Listener `HTTP:80`
         - Select the `Frontend-LB-HTTP-TG`
     
-    - Click on `Create load balancer`
 
-### Create Backend Load Balancer
+ Backend Load Balancer
 - Listeners and routing: 
-    - Click on `Create a target group` to create `HTTP` target group
+    -  on `Create a target group` to create `HTTP` target group
         - target type: select `instances`
         - Target group name: `Backend-LB-HTTP-TG`
         - Protocol and Port: `HTTP`:`80`
@@ -255,10 +241,8 @@
         - Protocol version: `HTTP1`
         - Health checks: `HTTP`
         - Health check path: `/VenturaMailingApp.php`
-        - Click on `Next`
-        - Click on `Create target group`
+        
             
-- Navigate to `EC2/Load Balancers` and Click on `Create Load Balancer`
     - Type: Choose `Application Load Balancer`
     - Load balancer name: `Prod-Backend-LB`
     - Scheme: `Internet-facing`
@@ -273,20 +257,19 @@
         - Listener `HTTP:80`
         - Select the `Backend-LB-HTTP-TG`
     
-    - Click on `Create load balancer`
 
-## STEP 7: Create a Database Subnet Group and Database Instance (RDS)
-### A) Create Databse Subnet Group
-- Navigate to the `RDS` Service
-- Click on `Subnet groups`
-    - Click `Create DB Subnet Group`
+7: Database Subnet Group and Database Instance (RDS)
+A) Databse Subnet Group
+- `RDS` Service
+`Subnet groups`
+    - ` DB Subnet Group`
     - Name: `prod-db-subnet-group`
-    - VPC: Select `Prod-VPC`
-    - Availability Zones: Select the two zones you used for this project. Example `us-west-1a` and `us-west-1c`
+    - VPC:  `Prod-VPC`
+    - Availability Zones:the two zones you used for this project. Example `us-west-1a` and `us-west-1c`
     - Subnets: Select `Prod-db-Subnet-1` and `Prod-db-Subnet-2`
     - Click on `CREATE`
 
-### B) Create a Database Instance
+ B) Create a Database Instance
 - Navigate to the `RDS` Service
 - Click on `Databases` and `Create Database`
     - Choose a database creation method: Select `Standard create`
