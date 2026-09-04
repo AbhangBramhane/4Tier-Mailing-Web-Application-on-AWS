@@ -1,8 +1,7 @@
 # 👨🏼‍💻 Deploying a 4 Tier Mailing Web Application on AWS 👨🏼‍💻
 ![4TierAppArchitecture!](https://github.com/awanmbandi/aws-real-world-projects/blob/four-tier-mailing-app-project/prod-env-project-architecture.png)
 
-## 
-In this runbook, we will implement the PHP Mailing deployment with multi-tier architecture on AWS. We will be using the Amazon EC2 service on AWS for Webservers and Appservers. For the Mysql database, we will use the RDS service. We'll also see how to connect the Webserver to the Appservers and the Appservers with the Database to achieve a multi-tier application architecture deployment.
+
 
 ## STEP 1: Create The Base Networking Infrastructure For NAT/ELB, Webservers, Appservers and Database
 ### A) Create The VPC Network
@@ -595,19 +594,4 @@ SELECT * FROM EMPLOYEES;
     - Select `Reboot With Failover?`
     - Click `CONFIRM`
 
-- `CONFIRM THAT THE APPLICATION IS STILL ACCESSIBLE` and
-- `That you are still logged into the Database from your Terminal`
 
-## CONGRATULATIONS!! CONGRATULATIONS!!
-
-## (OPTIONAL): Certificate Manager SSL/TLS Certificate Integration
-- Navigate to the `Certificate Manager` Service
-- Region: Confim you are in the same Region as your workloads
-- Click `Request a Certificate`
-- Certificate type: `Request a public certificate`
-- Click `Next`
-    - Fully qualified domain name: `Provide Your Domain From Rout53` Example: `www.jjtechphp-fourtier-webapplication.com`
-    - Click `REQUEST`
-
-- Give it a few Minutes for the Certificate Request to Complete
-- `Refresh` the CM Console
